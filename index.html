@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Makeup Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- Menú principal -->
+    <div class="menu">
+        <div class="logo">
+            <img src="imagenes/logo1.png" alt="Logo de la empresa" />
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="https://wa.me/573135048789" target="_blank" rel="noopener noreferrer">Contacto</a></li>
+                <li><a href="#" class="carrito">🛒 <span class="cantidad">0</span></a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Menú de categorías separado -->
+    <div class="menu-categorias">
+        <ul class="submenu-categorias">
+            <li><a href="#" data-categoria="Todos">Todos</a></li>
+            <li><a href="#" data-categoria="Epilacion">Epilación</a></li>
+            <li><a href="#" data-categoria="Cejas">Cejas</a></li>
+            <li><a href="#" data-categoria="Pestañas">Pestañas</a></li>
+            <li><a href="#" data-categoria="Maquillaje">Maquillaje</a></li>
+            <li><a href="#" data-categoria="Peinados">Peinados</a></li>
+            <li><a href="#" data-categoria="Talleres">Talleres</a></li>
+        </ul>
+    </div>
+
+    <!-- Contenido de bienvenida -->
+    <div class="contenido">
+        <h1>Bienvenidas a Angie Varela Studio</h1>
+        <p>Aquí podrás encontrar todos los productos que necesitas para sentirte segura y radiante cada día.</p>
+    </div>
+
+    <!-- Productos -->
+    <div id="productos-container" class="productos">
+        <!-- Aquí van los productos generados dinámicamente -->
+    </div>
+
+    <!-- Notificación -->
+    <div id="notificacion"></div>
+
+    <!-- Script externo -->
+    <script src="scripts.js"></script>
+
+</body>
+
+</html>
