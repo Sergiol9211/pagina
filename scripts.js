@@ -3,11 +3,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const productos = [
         {
-            nombre: "LASH + BROW SERUM AV",
+            nombre: "Epilación de Cejas",
+            descripcion: "Realzamos tu mirada con una epilación precisa y personalizada.Técnica suave que respeta la forma natural de tus cejas para un acabado limpio y armónico.",
+            precio: "$15.000",
+            categoria: "Epilacion"
+        },
+        {
+            nombre: "Epilación de bozo",
+            descripcion: "Recupera la fuerza, volumen y belleza natural de tus cejas y pestañas con un tratamiento diario que realmente funciona.",
+            precio: "$7.000",
+            categoria: "Epilacion"
+        },
+        {
+            nombre: "Epilacion de axilas",
             descripcion: "Recupera la fuerza, volumen y belleza natural de tus cejas y pestañas con un tratamiento diario que realmente funciona.",
             precio: "$30.000",
-            categoria: "Pestañas",
-            imagen: "imagenes/lash.jpg"
+            categoria: "Epilacion"
         },
         
         // Puedes agregar más productos aquí
@@ -39,12 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.classList.add('producto');
             div.innerHTML = `
-                <img src="${producto.imagen}" alt="${producto.nombre}">
                 <h3>${producto.nombre}</h3>
                 <p>${producto.descripcion}</p>
                 <p class="precio">${producto.precio}</p>
-                <button class="btn-carrito" data-nombre="${producto.nombre}">🛒 Agregar al carrito</button>
-                <button class="btn-detalle" data-nombre="${producto.nombre}">ver mas inf</button>
+                <button class="btn-carrito" data-nombre="${producto.nombre}">Reservar servicio</button>
+
             `;
             productosContainer.appendChild(div);
         });
@@ -76,3 +86,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 });
+
