@@ -210,8 +210,10 @@ body {
 .productos {
     display: flex;
     flex-wrap: wrap;
-    gap: 18px; /* más pequeño */
-    margin-top: 110px; /* más pequeño */
+    gap: 18px; /* menos espacio entre productos */
+    margin-top: 140px; /* menos margen superior */
+    margin-left: 1px; /* menos margen lateral */
+    margin-right: 1px; /* menos margen lateral */
     justify-content: center;
     position: relative;
     z-index: 1;
@@ -222,7 +224,7 @@ body {
     border-radius: 8px; /* más pequeño */
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07); /* más sutil */
     padding: 19px; /* más pequeño */
-    width: 180px; /* más pequeño */
+    width: 150px; /* más pequeño */
     text-align: center;
     position: relative;
     padding-bottom: 22px; /* más pequeño */
