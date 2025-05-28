@@ -221,13 +221,13 @@ body {
     background-color: #dadada;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 14px;
-    width: 190px;
+    padding: 10px;
+    width: 140px;
     text-align: center;
     position: relative;
-    padding-bottom: 44px; /* Reduced to match smaller button */
+    padding-bottom: 34px; /* Ajustado para botón más pequeño */
     transition: transform 0.2s;
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .producto:hover {
@@ -236,24 +236,24 @@ body {
 
 .precio {
     font-weight: bold;
-    margin-top: 8px;
-    font-size: 15px;
+    margin-top: 6px;
+    font-size: 12px;
 }
 
 .btn-carrito {
     background-color: #000;
     color: #fff;
-    padding: 6px 10px;
+    padding: 4px 8px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 8px;
-    width: 85%;
+    bottom: 6px;
+    width: 80%;
     margin: 0;
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .btn-carrito:hover {
@@ -275,9 +275,6 @@ body {
     z-index: 1001;
 }
 
-.notificacion.mostrar {
-    opacity: 1;
-}
 .notificacion.mostrar {
     opacity: 1;
 }
