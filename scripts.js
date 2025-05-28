@@ -4,27 +4,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const productos = [
         {
             nombre: "Epilación de Cejas",
-            descripcion: "Realzamos tu mirada con una epilación precisa y personalizada.Técnica suave que respeta la forma natural de tus cejas para un acabado limpio y armónico.",
+            descripcion: "Realzamos tu mirada con una epilación precisa y personalizada. Técnica suave que respeta la forma natural de tus cejas para un acabado limpio y armónico.",
             precio: "$15.000",
             categoria: "Epilacion"
         },
         {
+            nombre: "Epilacion de cejas+diseño",
+            descripcion: "Realzamos tu mirada con una epilación precisa y personalizada. Técnica suave que respeta la forma natural de tus cejas para un acabado limpio y armónico.",
+            precio: "$20.000",
+            categoria: "Epilacion"
+        },
+        {
             nombre: "Epilación de bozo",
-            descripcion: "Recupera la fuerza, volumen y belleza natural de tus cejas y pestañas con un tratamiento diario que realmente funciona.",
+            descripcion: "Eliminamos el vello de forma suave y delicada, dejando tu piel lisa, cuidada y sin irritaciones.",
             precio: "$7.000",
             categoria: "Epilacion"
         },
         {
-            nombre: "Epilacion de axilas",
-            descripcion: "Recupera la fuerza, volumen y belleza natural de tus cejas y pestañas con un tratamiento diario que realmente funciona.",
-            precio: "$30.000",
+            nombre: "Epilación de axilas",
+            descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
+            precio: "$15.000",
             categoria: "Epilacion"
         },
-        
-        // Puedes agregar más productos aquí
+        {
+            nombre: "Full face",
+            descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
+            precio: "$40.000",
+            categoria: "Epilacion"
+        },
+        {
+            nombre: "Laminado de cejas",
+            descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
+            precio: "$85.000",
+            categoria: "Cejas"
+        },
+        {
+            nombre: "Diseño + depilacion + henna",
+            descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
+            precio: "$35.000",
+            categoria: "Cejas"
+        },
+        {
+            nombre: "Henna",
+            descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
+            precio: "$20.000",
+            categoria: "Cejas"
+        },
+        {
+            nombre: "SPA de cejas",
+            descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
+            precio: "$15.000",
+            categoria: "Cejas"
+        }
     ];
 
-    // Manejo de clic en categorías
     document.querySelectorAll('[data-categoria]').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -33,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Mostrar productos según categoría
     function mostrarProductos(categoriaSeleccionada) {
         productosContainer.innerHTML = '';
 
@@ -54,28 +86,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>${producto.descripcion}</p>
                 <p class="precio">${producto.precio}</p>
                 <button class="btn-carrito" data-nombre="${producto.nombre}">Reservar servicio</button>
-
             `;
             productosContainer.appendChild(div);
         });
     }
 
-    // Mostrar todos los productos al cargar la página
     mostrarProductos('Todos');
 
-    // Detectar clics en botones de "Agregar al carrito"
     document.addEventListener("click", function (e) {
         if (e.target.classList.contains("btn-carrito")) {
             const nombreProducto = e.target.getAttribute("data-nombre");
             mostrarNotificacion(`"${nombreProducto}" fue agregado al carrito 🛍️`);
 
-            // Aumentar contador del carrito
             const contador = document.querySelector(".carrito .cantidad");
             contador.textContent = parseInt(contador.textContent) + 1;
         }
     });
 
-    // Mostrar notificación
     function mostrarNotificacion(mensaje) {
         const notificacion = document.getElementById('notificacion');
         notificacion.textContent = mensaje;
@@ -86,4 +113,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 });
-
