@@ -221,7 +221,7 @@ body {
     background-color: #dadada;
     border-radius: 8px; /* más pequeño */
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07); /* más sutil */
-    padding: 6px; /* más pequeño */
+    padding: 12px; /* más pequeño */
     width: 120px; /* más pequeño */
     text-align: center;
     position: relative;
