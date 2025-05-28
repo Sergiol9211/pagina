@@ -94,16 +94,18 @@ body {
 
 .contenido h1 a {
     color: #333;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 700;
     text-decoration: none;
     font-family: inherit;
     transition: color 0.3s;
+    animation: blink-link-color 1s steps(2, start) infinite;
 }
 
 .contenido h1 a:hover {
     color: rgb(240, 7, 201);
     text-decoration: underline;
+    animation: blink-link-color-hover 1s steps(2, start) infinite;
 }
 
 @keyframes slide-in-out {
@@ -135,6 +137,24 @@ body {
     100% {
         transform: translateX(-100%);
         opacity: 0;
+    }
+}
+
+@keyframes blink-link-color {
+    0%, 100% {
+        color: #333;
+    }
+    50% {
+        color: rgb(240, 7, 201);
+    }
+}
+
+@keyframes blink-link-color-hover {
+    0%, 100% {
+        color: rgb(240, 7, 201);
+    }
+    50% {
+        color: #333;
     }
 }
 
@@ -191,7 +211,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 30px;
-    margin-top: 200px;
+    margin-top: 150px;
     justify-content: center;
     position: relative;
     z-index: 1;
@@ -231,6 +251,7 @@ body {
     bottom: 10px;
     width: 90%;
     margin: 0;
+    font-size: 18px;
 }
 
 .btn-carrito:hover {
