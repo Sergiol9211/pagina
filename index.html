@@ -43,6 +43,7 @@
 
     <!-- Contenedor de productos -->
     <div id="productos-container" class="productos">
+       
         <!-- Se llenará dinámicamente -->
     </div>
 
@@ -69,8 +70,7 @@
             <p>Síguenos en <a href="https://www.instagram.com/angievarela.studio?igsh=MW5kaDFia292a3cwNA==" target="_blank" rel="noopener">Instagram</a></p>
             <p>&copy; 2024 Makeup Store. Todos los derechos reservados.</p>
             <p>Creado por <a href="https://www.instagram.com/contalib1.0?igsh=b3UwbTNmZ3U3MTAy" target="_blank" rel="noopener">Contalib1.0</a></p>
-            <button id="btn-google-login">Ver turnos disponibles</button>
-            <div id="turnos-disponibles"></div>
+            
         </div>
     </footer>
 
@@ -78,9 +78,16 @@
     <div id="notificacion" class="notificacion"></div>
 
     <script src="https://apis.google.com/js/api.js"></script>
+
     <script>
         window.onload = handleClientLoad;
     </script>
+<!-- Agrega esto antes del cierre de </body> -->
+<button id="btn-google-login" style="margin: 20px auto; display: block;">Ver turnos disponibles</button>
+<div id="turnos-disponibles" style="margin: 0 auto 40px auto; max-width: 500px;"></div>
+    
+    <div id="available-slots"></div>
+
 
     <!-- Script externo -->
     <script src="scripts.js"></script>
