@@ -9,55 +9,64 @@ document.addEventListener('DOMContentLoaded', () => {
             nombre: "Epilación de Cejas",
             descripcion: "Realzamos tu mirada con una epilación precisa y personalizada. Técnica suave que respeta la forma natural de tus cejas para un acabado limpio y armónico.",
             precio: "$15.000",
-            categoria: "Epilacion"
+            categoria: "Epilacion",
+            duracion: 15
         },
         {
             nombre: "Epilacion de cejas+diseño",
             descripcion: "Realzamos tu mirada con una epilación precisa y personalizada. Técnica suave que respeta la forma natural de tus cejas para un acabado limpio y armónico.",
             precio: "$20.000",
-            categoria: "Epilacion"
+            categoria: "Epilacion",
+            duracion: 20
         },
         {
             nombre: "Epilación de bozo",
             descripcion: "Eliminamos el vello de forma suave y delicada, dejando tu piel lisa, cuidada y sin irritaciones.",
             precio: "$7.000",
-            categoria: "Epilacion"
+            categoria: "Epilacion",
+            duracion: 10
         },
         {
             nombre: "Epilación de axilas",
             descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
             precio: "$15.000",
-            categoria: "Epilacion"
+            categoria: "Epilacion",
+            duracion: 15
         },
         {
             nombre: "Full face",
             descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
             precio: "$40.000",
-            categoria: "Epilacion"
+            categoria: "Epilacion",
+            duracion: 30
         },
         {
             nombre: "Laminado de cejas",
             descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
             precio: "$85.000",
-            categoria: "Cejas"
+            categoria: "Cejas",
+            duracion: 45
         },
         {
             nombre: "Diseño + depilacion + henna",
             descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
             precio: "$35.000",
-            categoria: "Cejas"
+            categoria: "Cejas",
+            duracion: 30
         },
         {
             nombre: "Henna",
             descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
             precio: "$20.000",
-            categoria: "Cejas"
+            categoria: "Cejas",
+            duracion: 20
         },
         {
             nombre: "SPA de cejas",
             descripcion: "Técnica rápida y efectiva para una piel suave, limpia y sin vello por más tiempo.",
             precio: "$15.000",
-            categoria: "Cejas"
+            categoria: "Cejas",
+            duracion: 20
         }
     ];
 
@@ -93,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3>${producto.nombre}</h3>
                 <p>${producto.descripcion}</p>
                 <p class="precio">${producto.precio}</p>
+                <p class="duracion">Duración: ${producto.duracion} min</p>
                 <button class="btn-carrito" data-nombre="${producto.nombre}">Reservar servicio</button>
             `;
             productosContainer.appendChild(div);
@@ -107,11 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Agregar producto al carrito
     function agregarAlCarrito(nombreProducto) {
+        const producto = productos.find(p => p.nombre === nombreProducto);
         const productoExistente = carrito.find(item => item.nombre === nombreProducto);
         if (productoExistente) {
             productoExistente.cantidad += 1;
         } else {
-            carrito.push({ nombre: nombreProducto, cantidad: 1 });
+            carrito.push({ nombre: nombreProducto, cantidad: 1, duracion: producto.duracion });
         }
         actualizarContadorCarrito();
     }
@@ -144,10 +155,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             html += '</ul>';
             html += `<p style="font-weight:bold;font-size:18px;margin-top:10px;">Total: $${total.toLocaleString('es-CO')}</p>`;
-            // Botón para ver turnos disponibles y contenedor
-            html += `<button id="btn-google-login" style="margin-top:10px;padding:10px 20px;background:#4285F4;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:16px;">Ver turnos disponibles</button>`;
-            html += `<div id="turnos-disponibles" style="margin-top:15px;"></div>`;
-            html += `<button id="finalizar-reserva" style="margin-top:15px;padding:10px 20px;background:#000;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:16px;">Finalizar reserva</button>`;
+
+            // Mostramos el calendario directamente (sin botón)
+            html += `<div id="calendario-turnos" style="margin-top:15px;"></div>`;
+
+            // Formulario de datos del cliente
+            html += `
+                <form id="form-datos-cliente" style="margin-top:15px;">
+                    <label>Nombre:<br><input type="text" name="nombre" required style="width:100%;margin-bottom:8px;"></label><br>
+                    <label>WhatsApp:<br><input type="tel" name="whatsapp" required style="width:100%;margin-bottom:8px;"></label><br>
+                    <label>Correo:<br><input type="email" name="correo" required style="width:100%;margin-bottom:8px;"></label><br>
+                    <button type="submit" style="padding:10px 20px;background:#000;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:16px;">Finalizar reserva</button>
+                </form>
+            `;
         }
         const modal = document.createElement('div');
         modal.id = 'modal-carrito';
@@ -171,26 +191,123 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         });
 
-        // Acción del botón "Finalizar reserva"
-        const btnFinalizar = modal.querySelector('#finalizar-reserva');
-        if (btnFinalizar) {
-            btnFinalizar.onclick = function () {
+        // Mostrar el calendario automáticamente si hay productos en el carrito
+        if (carrito.length > 0) {
+            const duracionTotal = carrito.reduce((sum, item) => sum + (item.duracion * item.cantidad), 0);
+            mostrarCalendarioTurnos(modal.querySelector('#calendario-turnos'), duracionTotal);
+        }
+
+        // Acción del formulario de datos del cliente
+        const formDatos = modal.querySelector('#form-datos-cliente');
+        if (formDatos) {
+            formDatos.onsubmit = function (e) {
+                e.preventDefault();
+                const nombre = formDatos.nombre.value.trim();
+                const whatsapp = formDatos.whatsapp.value.trim();
+                const correo = formDatos.correo.value.trim();
+
+                // Aquí puedes guardar o enviar los datos como desees
                 modal.remove();
                 carrito = [];
                 actualizarContadorCarrito();
-                mostrarNotificacion('¡Reserva finalizada! Nos pondremos en contacto contigo.');
+                mostrarNotificacion(`¡Reserva finalizada! Gracias, ${nombre}. Nos pondremos en contacto por WhatsApp.`);
+                // Si quieres ver los datos en consola:
+                console.log({ nombre, whatsapp, correo });
             };
         }
+    }
 
-        // Asignar evento al botón "Ver turnos disponibles" dentro del modal
-        const btnGoogleLogin = modal.querySelector('#btn-google-login');
-        if (btnGoogleLogin) {
-            btnGoogleLogin.onclick = function () {
-                if (typeof handleAuthClick === "function") {
-                    handleAuthClick();
+    // Función para mostrar el calendario y reservar turno
+    function mostrarCalendarioTurnos(contenedor, duracionTotal) {
+        // Fecha actual
+        const hoy = new Date();
+        let año = hoy.getFullYear();
+        let mes = hoy.getMonth();
+
+        render();
+
+        function render() {
+            // Selector de mes y año
+            let html = `
+                <div style="margin-bottom:10px;">
+                    <button id="mes-anterior" style="margin-right:10px;">&#8592;</button>
+                    <span style="font-weight:bold;">${new Date(año, mes).toLocaleString('es-CO', { month: 'long' })} ${año}</span>
+                    <button id="mes-siguiente" style="margin-left:10px;">&#8594;</button>
+                </div>
+                <h3>Selecciona un día para tu turno</h3>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+            `;
+            const diasEnMes = new Date(año, mes + 1, 0).getDate();
+
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                html += `<button class="btn-dia-turno" data-dia="${dia}" style="width:40px;height:40px;">${dia}</button>`;
+            }
+            html += `</div><div id="horas-turno" style="margin-top:10px;"></div>`;
+
+            contenedor.innerHTML = html;
+
+            // Navegación de meses
+            contenedor.querySelector('#mes-anterior').onclick = () => {
+                if (mes === 0) {
+                    mes = 11;
+                    año--;
+                } else {
+                    mes--;
                 }
+                render();
             };
+            contenedor.querySelector('#mes-siguiente').onclick = () => {
+                if (mes === 11) {
+                    mes = 0;
+                    año++;
+                } else {
+                    mes++;
+                }
+                render();
+            };
+
+            // Evento para seleccionar día
+            contenedor.querySelectorAll('.btn-dia-turno').forEach(btn => {
+                btn.onclick = function () {
+                    const diaSeleccionado = this.getAttribute('data-dia');
+                    mostrarHorasTurno(contenedor.querySelector('#horas-turno'), año, mes, diaSeleccionado, duracionTotal);
+                };
+            });
         }
+    }
+
+    // Horarios según bloques de atención y duración total
+    function mostrarHorasTurno(contenedor, año, mes, dia, duracionTotal) {
+        let html = `<h4>Selecciona una hora:</h4>`;
+        const bloques = [
+            { inicio: 9, fin: 12 },   // 9:00 a 12:00
+            { inicio: 14, fin: 19 }   // 14:00 a 19:00
+        ];
+
+        bloques.forEach(bloque => {
+            // Convertimos el inicio y fin del bloque a minutos desde medianoche
+            let bloqueInicioMin = bloque.inicio * 60;
+            let bloqueFinMin = bloque.fin * 60;
+
+            for (let min = bloqueInicioMin; min + duracionTotal <= bloqueFinMin; min += duracionTotal) {
+                let hora = Math.floor(min / 60);
+                let minutos = min % 60;
+                // Formato HH:MM
+                let horaStr = `${hora.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`;
+                html += `<button class="btn-hora-turno" data-hora="${horaStr}" style="margin:2px;">${horaStr}</button>`;
+            }
+        });
+
+        contenedor.innerHTML = html;
+
+        // Evento para seleccionar hora
+        contenedor.querySelectorAll('.btn-hora-turno').forEach(btn => {
+            btn.onclick = function () {
+                const horaSeleccionada = this.getAttribute('data-hora');
+                alert(`Turno reservado para el ${dia}/${mes + 1}/${año} a las ${horaSeleccionada}\nDuración total: ${duracionTotal} minutos`);
+                // Aquí puedes guardar la reserva con la duración si lo deseas
+            };
+        });
     }
 
     // Evento para botones "Reservar servicio" y mostrar carrito
@@ -237,81 +354,3 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 });
-
-// --- Google Calendar API ---
-const CLIENT_ID = '369828587641-e96k726h6v401ugk1go8rfgp8j1em21h.apps.googleusercontent.com';
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
-
-// Cargar la API de Google al cargar la página
-window.handleClientLoad = () => {
-    gapi.load('client:auth2', initClient);
-};
-
-function initClient() {
-    gapi.client.init({
-        clientId: CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES
-    });
-}
-
-function handleAuthClick() {
-    gapi.auth2.getAuthInstance().signIn().then(() => {
-        // Busca el contenedor dentro del modal
-        const turnosDiv = document.getElementById('turnos-disponibles');
-        if (turnosDiv) {
-            listarTurnosDisponibles(turnosDiv);
-        }
-    });
-}
-
-function listarTurnosDisponibles(turnosDiv) {
-    // Duración del servicio en minutos (puedes cambiarlo según el servicio)
-    const duracionServicio = 60;
-    // Consulta los eventos de hoy
-    const inicio = new Date();
-    inicio.setHours(8, 0, 0, 0); // 8:00 am
-    const fin = new Date();
-    fin.setHours(18, 0, 0, 0); // 6:00 pm
-
-    gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': inicio.toISOString(),
-        'timeMax': fin.toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'orderBy': 'startTime'
-    }).then(response => {
-        const eventos = response.result.items;
-        let turnos = [];
-        let libreDesde = new Date(inicio);
-
-        eventos.forEach(ev => {
-            let inicioEvento = new Date(ev.start.dateTime || ev.start.date);
-            let finEvento = new Date(ev.end.dateTime || ev.end.date);
-            if ((inicioEvento - libreDesde) / 60000 >= duracionServicio) {
-                turnos.push({
-                    desde: new Date(libreDesde),
-                    hasta: new Date(inicioEvento)
-                });
-            }
-            libreDesde = finEvento > libreDesde ? finEvento : libreDesde;
-        });
-        // Último hueco del día
-        if ((fin - libreDesde) / 60000 >= duracionServicio) {
-            turnos.push({
-                desde: new Date(libreDesde),
-                hasta: new Date(fin)
-            });
-        }
-
-        // Mostrar turnos disponibles
-        let html = '<h3>Turnos disponibles:</h3><ul>';
-        turnos.forEach(t => {
-            html += `<li>${t.desde.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(t.desde.getTime() + duracionServicio * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</li>`;
-        });
-        html += '</ul>';
-        turnosDiv.innerHTML = html;
-    });
-}
