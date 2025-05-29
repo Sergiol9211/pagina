@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 // --- Google Calendar API ---
-const CLIENT_ID = 'TU_CLIENT_ID.apps.googleusercontent.com'; // Reemplaza por tu Client ID
+const CLIENT_ID = 369828587641 - 'e96k726h6v401ugk1go8rfgp8j1em21h.apps.googleusercontent.com'; // Reemplaza por tu Client ID
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
