@@ -1,4 +1,3 @@
-// Esperamos que el DOM esté completamente cargado antes de ejecutar cualquier código
 document.addEventListener('DOMContentLoaded', () => {
 
     // Obtenemos el contenedor donde se mostrarán los productos
@@ -145,6 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             html += '</ul>';
             html += `<p style="font-weight:bold;font-size:18px;margin-top:10px;">Total: $${total.toLocaleString('es-CO')}</p>`;
+            // Botón para ver turnos disponibles y contenedor
+            html += `<button id="btn-google-login" style="margin-top:10px;padding:10px 20px;background:#4285F4;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:16px;">Ver turnos disponibles</button>`;
+            html += `<div id="turnos-disponibles" style="margin-top:15px;"></div>`;
             html += `<button id="finalizar-reserva" style="margin-top:15px;padding:10px 20px;background:#000;color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:16px;">Finalizar reserva</button>`;
         }
         const modal = document.createElement('div');
@@ -177,6 +179,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 carrito = [];
                 actualizarContadorCarrito();
                 mostrarNotificacion('¡Reserva finalizada! Nos pondremos en contacto contigo.');
+            };
+        }
+
+        // Asignar evento al botón "Ver turnos disponibles" dentro del modal
+        const btnGoogleLogin = modal.querySelector('#btn-google-login');
+        if (btnGoogleLogin) {
+            btnGoogleLogin.onclick = function () {
+                if (typeof handleAuthClick === "function") {
+                    handleAuthClick();
+                }
             };
         }
     }
@@ -225,13 +237,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 });
+
 // --- Google Calendar API ---
-const CLIENT_ID = '369828587641-e96k726h6v401ugk1go8rfgp8j1em21h.apps.googleusercontent.com'; // Reemplaza por tu Client ID
+const CLIENT_ID = '369828587641-e96k726h6v401ugk1go8rfgp8j1em21h.apps.googleusercontent.com';
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
 // Cargar la API de Google al cargar la página
-window.handleClientLoad = function () {
+window.handleClientLoad = () => {
     gapi.load('client:auth2', initClient);
 };
 
@@ -240,16 +253,20 @@ function initClient() {
         clientId: CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES
-    }).then(() => {
-        document.getElementById('btn-google-login').onclick = handleAuthClick;
     });
 }
 
 function handleAuthClick() {
-    gapi.auth2.getAuthInstance().signIn().then(listarTurnosDisponibles);
+    gapi.auth2.getAuthInstance().signIn().then(() => {
+        // Busca el contenedor dentro del modal
+        const turnosDiv = document.getElementById('turnos-disponibles');
+        if (turnosDiv) {
+            listarTurnosDisponibles(turnosDiv);
+        }
+    });
 }
 
-function listarTurnosDisponibles() {
+function listarTurnosDisponibles(turnosDiv) {
     // Duración del servicio en minutos (puedes cambiarlo según el servicio)
     const duracionServicio = 60;
     // Consulta los eventos de hoy
@@ -295,6 +312,6 @@ function listarTurnosDisponibles() {
             html += `<li>${t.desde.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${new Date(t.desde.getTime() + duracionServicio * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</li>`;
         });
         html += '</ul>';
-        document.getElementById('turnos-disponibles').innerHTML = html;
+        turnosDiv.innerHTML = html;
     });
 }
