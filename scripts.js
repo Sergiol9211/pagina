@@ -200,19 +200,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // Acción del formulario de datos del cliente
         const formDatos = modal.querySelector('#form-datos-cliente');
         if (formDatos) {
-            formDatos.onsubmit = function (e) {
+            formDatos.onsubmit = async function (e) {
                 e.preventDefault();
                 const nombre = formDatos.nombre.value.trim();
                 const whatsapp = formDatos.whatsapp.value.trim();
                 const correo = formDatos.correo.value.trim();
 
-                // Aquí puedes guardar o enviar los datos como desees
+                // Obtener día y hora seleccionados
+                const diaBtn = document.querySelector('.btn-dia-turno.seleccionado');
+                const horaBtn = document.querySelector('.btn-hora-turno.seleccionado');
+                const fecha = diaBtn ? `${diaBtn.textContent.padStart(2, '0')}/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}` : '';
+                const hora = horaBtn ? horaBtn.textContent : '';
+                const servicios = carrito.map(item => `${item.nombre} x${item.cantidad}`).join(', ');
+
+                // Si tienes backend, aquí puedes enviar los datos con fetch:
+                // await fetch('http://localhost:3000/guardar-turno', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ nombre, whatsapp, correo, fecha, hora, servicios })
+                // });
+
                 modal.remove();
                 carrito = [];
                 actualizarContadorCarrito();
                 mostrarNotificacion(`¡Reserva finalizada! Gracias, ${nombre}. Nos pondremos en contacto por WhatsApp.`);
                 // Si quieres ver los datos en consola:
-                console.log({ nombre, whatsapp, correo });
+                console.log({ nombre, whatsapp, correo, fecha, hora, servicios });
             };
         }
     }
@@ -266,9 +279,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 render();
             };
 
-            // Evento para seleccionar día
+            // Evento para seleccionar día con resaltado
             contenedor.querySelectorAll('.btn-dia-turno').forEach(btn => {
                 btn.onclick = function () {
+                    // Quitar selección previa
+                    contenedor.querySelectorAll('.btn-dia-turno').forEach(b => b.classList.remove('seleccionado'));
+                    // Marcar el seleccionado
+                    this.classList.add('seleccionado');
                     const diaSeleccionado = this.getAttribute('data-dia');
                     mostrarHorasTurno(contenedor.querySelector('#horas-turno'), año, mes, diaSeleccionado, duracionTotal);
                 };
@@ -300,12 +317,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         contenedor.innerHTML = html;
 
-        // Evento para seleccionar hora
+        // Evento para seleccionar hora con resaltado
         contenedor.querySelectorAll('.btn-hora-turno').forEach(btn => {
             btn.onclick = function () {
-                const horaSeleccionada = this.getAttribute('data-hora');
-                alert(`Turno reservado para el ${dia}/${mes + 1}/${año} a las ${horaSeleccionada}\nDuración total: ${duracionTotal} minutos`);
-                // Aquí puedes guardar la reserva con la duración si lo deseas
+                // Quitar selección previa
+                contenedor.querySelectorAll('.btn-hora-turno').forEach(b => b.classList.remove('seleccionado'));
+                // Marcar el seleccionado
+                this.classList.add('seleccionado');
+                // Aquí puedes guardar la hora seleccionada si lo deseas
             };
         });
     }
