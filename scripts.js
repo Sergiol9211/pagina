@@ -130,8 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Actualizar el contador del carrito
     function actualizarContadorCarrito() {
         const contador = document.querySelector(".carrito .cantidad");
-        const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-        contador.textContent = total;
+        if (contador) {
+            const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            contador.textContent = total;
+        }
     }
 
     // Mostrar el carrito en un modal
@@ -209,23 +211,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Obtener día y hora seleccionados
                 const diaBtn = document.querySelector('.btn-dia-turno.seleccionado');
                 const horaBtn = document.querySelector('.btn-hora-turno.seleccionado');
-                const fecha = diaBtn ? `${diaBtn.textContent.padStart(2, '0')}/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}` : '';
-                const hora = horaBtn ? horaBtn.textContent : '';
+                if (!diaBtn || !horaBtn) {
+                    mostrarNotificacion('Por favor selecciona un día y una hora para tu turno.');
+                    return;
+                }
+                const fecha = `${diaBtn.textContent.padStart(2, '0')}/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`;
+                const hora = horaBtn.textContent;
                 const servicios = carrito.map(item => `${item.nombre} x${item.cantidad}`).join(', ');
 
-                // Si tienes backend, aquí puedes enviar los datos con fetch:
-                // await fetch('http://localhost:3000/guardar-turno', {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify({ nombre, whatsapp, correo, fecha, hora, servicios })
-                // });
-
-                modal.remove();
-                carrito = [];
-                actualizarContadorCarrito();
-                mostrarNotificacion(`¡Reserva finalizada! Gracias, ${nombre}. Nos pondremos en contacto por WhatsApp.`);
-                // Si quieres ver los datos en consola:
-                console.log({ nombre, whatsapp, correo, fecha, hora, servicios });
+                try {
+                    const resp = await fetch('http://localhost:3000/guardar-turno', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombre, whatsapp, correo, fecha, hora, servicios })
+                    });
+                    if (!resp.ok) throw new Error('No se pudo guardar el turno');
+                    modal.remove();
+                    carrito = [];
+                    actualizarContadorCarrito();
+                    mostrarNotificacion(`¡Reserva finalizada! Gracias, ${nombre}. Nos pondremos en contacto por WhatsApp.`);
+                    console.log({ nombre, whatsapp, correo, fecha, hora, servicios });
+                } catch (err) {
+                    mostrarNotificacion('Error al guardar la reserva. Intenta de nuevo.');
+                    console.error(err);
+                }
             };
         }
     }
@@ -355,21 +364,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Mostrar el modal con indicaciones al hacer clic en el enlace
-    document.getElementById('enlace-indicaciones').onclick = function (e) {
-        e.preventDefault();
-        document.getElementById('modal-indicaciones').style.display = 'flex';
-    };
+    const enlaceIndicaciones = document.getElementById('enlace-indicaciones');
+    if (enlaceIndicaciones) {
+        enlaceIndicaciones.onclick = function (e) {
+            e.preventDefault();
+            document.getElementById('modal-indicaciones').style.display = 'flex';
+        };
+    }
 
     // Cerrar el modal al hacer clic en el botón "cerrar"
-    document.getElementById('cerrar-indicaciones').onclick = function () {
-        document.getElementById('modal-indicaciones').style.display = 'none';
-    };
+    const cerrarIndicaciones = document.getElementById('cerrar-indicaciones');
+    if (cerrarIndicaciones) {
+        cerrarIndicaciones.onclick = function () {
+            document.getElementById('modal-indicaciones').style.display = 'none';
+        };
+    }
 
     // También cerrar el modal si se hace clic fuera del contenido
-    document.getElementById('modal-indicaciones').onclick = function (e) {
-        if (e.target === this) {
-            this.style.display = 'none';
-        }
-    };
+    const modalIndicaciones = document.getElementById('modal-indicaciones');
+    if (modalIndicaciones) {
+        modalIndicaciones.onclick = function (e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        };
+    }
 
 });
