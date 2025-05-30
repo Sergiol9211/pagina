@@ -18,7 +18,7 @@ Hora: ${hora}
 Servicios: ${servicios}
 --------------------------
 `;
-    fs.appendFileSync('datos.txt', texto, 'utf8');
+    fs.appendFileSync('turnos.txt', texto, 'utf8');
     res.json({ ok: true, mensaje: 'Turno guardado' });
 });
 
